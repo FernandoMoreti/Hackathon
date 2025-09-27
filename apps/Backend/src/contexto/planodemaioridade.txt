@@ -1,6 +1,6 @@
 FLUXO 7 – Plano de Maioridade
 
-(Refatorado com base no diagrama fornecido — processo presencial e documental, com papéis definidos para Atendimento e Cadastro)
+
 
 CONTEXTO GERAL
 
