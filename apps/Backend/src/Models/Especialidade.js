@@ -37,6 +37,13 @@ const Especialidade = sequelize.define('Especialidade', {
         defaultValue: true,
         allowNull: false,
     },
+    id_medico: {
+        type: DataTypes.UUID,
+        references: {
+            model: 'tb_medico',
+            key: 'id',
+        }
+    },
 }, {
     tableName: 'tb_especialidade',
     timestamps: false,

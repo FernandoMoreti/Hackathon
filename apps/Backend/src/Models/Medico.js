@@ -26,13 +26,6 @@ const Medico = sequelize.define('Medico', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    id_especialidade: {
-        type: DataTypes.UUID,
-        references: {
-            model: 'tb_especialidade',
-            key: 'id',
-        }
-    },
     dtBirthday: {
         type: DataTypes.DATEONLY,
         allowNull: false,
