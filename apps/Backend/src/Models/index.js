@@ -15,4 +15,6 @@ fs.readdirSync(__dirname)
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+require('./Associations')(db);
+
 module.exports = db;
