@@ -4,8 +4,7 @@ const sequelize = require('../Config/database');
 const Especialidade = sequelize.define('Especialidade', {
 
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
     },
