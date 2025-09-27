@@ -1,9 +1,9 @@
-const { validateEspecialidade } = require("../services/EspecialidadeService")
+const { getMedicosPorEspecialidade } = require("../services/EspecialidadeService")
 
 const especialidade = async (req, res) => {
    try {
 
-    await validateEspecialidade(req, res);
+    await getMedicosPorEspecialidade(req, res);
 
    } catch (error) {
       console.error(error)

@@ -1,19 +1,19 @@
-module.exports = (db) => {
-    const { Medico, Especialidade } = db;
+const Medico = require('./Medico');
+const Especialidade = require('./Especialidade');
 
-    if (Medico && Especialidade) {
-        Medico.belongsToMany(Especialidade, {
-        through: 'tb_medicoEspecialidade',
-        foreignKey: 'medicoId',
-        otherKey: 'especialidadeId',
-        timestamps: false,
-        });
+// Associação N:N via tabela de junção
+Medico.belongsToMany(Especialidade, { 
+    through: 'tb_medico_especialidade', 
+    foreignKey: 'medico_id', 
+    otherKey: 'especialidade_id',
+    timestamps: false
+});
 
-        Especialidade.belongsToMany(Medico, {
-        through: 'tb_medicoEspecialidade',
-        foreignKey: 'especialidadeId',
-        otherKey: 'medicoId',
-        timestamps: false,
-        });
-    }
-};
+Especialidade.belongsToMany(Medico, { 
+    through: 'tb_medico_especialidade', 
+    foreignKey: 'especialidade_id', 
+    otherKey: 'medico_id',
+    timestamps: false
+});
+
+module.exports = { Medico, Especialidade };
