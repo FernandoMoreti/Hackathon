@@ -1,7 +1,7 @@
 // services/authorizationService.js
+const Autorizacao = require('../Models/Autorizacao');
 const { findBestRolMatch, hasCoverage, needsAudit, isOPME } = require('../utils/matchRol');
 const { genProtocol } = require('../utils/text');
-const Autorizacao = require('../Models/Autorizacao');
 
 function prazoDias(eh_opme) {
   return eh_opme ? 10 : 5; // OPME = 10 dias; demais = 5
@@ -26,7 +26,6 @@ async function decidirExame({ descricao, beneficiario, arquivo_origem }) {
   const auditoria = needsAudit(match);
   const opme = isOPME(match);
 
-  // 1) Sem auditoria + com cobertura => autoriza já (protocolo + guia)
   if (!auditoria && cobertura) {
     return Autorizacao.create({
       beneficiario, arquivo_origem,
@@ -44,7 +43,6 @@ async function decidirExame({ descricao, beneficiario, arquivo_origem }) {
     });
   }
 
-  // 2) Precisa auditoria => gerar protocolo de retorno + prazo
   if (auditoria) {
     const d = new Date();
     d.setDate(d.getDate() + prazoDias(opme));
@@ -59,12 +57,12 @@ async function decidirExame({ descricao, beneficiario, arquivo_origem }) {
       eh_opme: opme,
       status: 'em_auditoria',
       protocolo_retorno: genProtocol('AUD'),
-      prazo_retorno: d.toISOString().slice(0,10),
+      prazo_retorno: d.toISOString().slice(0, 10),
       motivo: null,
     });
   }
 
-  // 3) Sem cobertura => negativa com motivo
+  // sem cobertura
   return Autorizacao.create({
     beneficiario, arquivo_origem,
     descricao_exame: descricao,
