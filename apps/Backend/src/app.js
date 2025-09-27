@@ -4,6 +4,7 @@ const app = express();
 const routes = require('./routes'); // Suas rotas principais
 const chatRoutes = require('./routes/chat'); // Nova rota do chatbot
 
+
 app.use(cors());
 app.use(express.json());
 
@@ -11,6 +12,6 @@ app.use(express.json());
 app.use(routes);
 
 // 🔹 Rota específica do chatbot
-app.use('/api/chat', chatRoutes);
+app.use('/chat', chatRoutes);
 
 module.exports = app;

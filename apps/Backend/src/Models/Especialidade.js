@@ -12,7 +12,6 @@ const Especialidade = sequelize.define('Especialidade', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-
 }, {
     tableName: 'tb_especialidade',
     timestamps: false,
