@@ -1,17 +1,23 @@
 const express = require('express');
 const cors = require('cors');
+
 const app = express();
-const routes = require('./routes'); // Suas rotas principais
-const chatRoutes = require('./routes/chat'); // Nova rota do chatbot
 
+// Importa as rotas
+const routes = require('./routes');                // Rotas gerais
+const chatRoutes = require('./routes/chat');       // Rota do chatbot
+const authorizationRoutes = require('./routes/authorization'); // Rota de autorização
 
+// Middlewares globais
 app.use(cors());
 app.use(express.json());
 
-// 🔹 Rotas principais
+// Rotas específicas primeiro
+app.use('/api/chat', chatRoutes);
+app.use('/api/autorizacao', authorizationRoutes);
+
+// Rotas gerais por último
 app.use(routes);
 
-// 🔹 Rota específica do chatbot
-app.use('/chat', chatRoutes);
-
+// Exporta a instância do app
 module.exports = app;
