@@ -1,3 +1,4 @@
+const Especialidade = require("../Models/Especialidade");
 const Paciente = require("../Models/User");
 const yup = require("yup");
 
@@ -47,7 +48,9 @@ const validateBeneficiario = async (req, res, next) => {
       return res.status(404).json({ message: "Usuário não encontrado!" });
     }
 
-    return res.status(200).json({ message: "Sucesso", user });
+    const especialidade = await Especialidade.findAll()
+
+    return res.status(200).json({ message: "ok", data: especialidade})
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).json({ errors: error.errors });
