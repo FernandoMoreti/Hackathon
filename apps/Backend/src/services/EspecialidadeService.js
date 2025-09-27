@@ -1,25 +1,30 @@
 const Especialidade = require("../Models/Especialidade");
 const Medico = require("../Models/Medico");
-const yup = require("yup");
 
-const validateEspecialidade = async (req, res, next) => {
+const getMedicosPorEspecialidade = async (req, res) => {
   try {
-    const { codigo } = req.query;
+    const especialidadeId = req.query.codigo;
 
-    const medicoComEspecialidades = await Medico.findByPk(medico.id, {
-        include: Especialidade,
+    if (!especialidadeId) {
+      return res.status(400).json({ error: "O id da especialidade é obrigatório." });
+    }
+
+    // Busca todos os médicos que possuem a especialidade
+    const medicos = await Medico.findAll({
+      include: {
+        model: Especialidade,
+        where: { id: especialidadeId },
+        through: { attributes: [] }, // não retorna dados da tabela de junção
+      },
     });
 
-    
-    return res.status(200).json({ message: "ok", data: medicoComEspecialidades})
+    return res.status(200).json({ data: medicos });
   } catch (error) {
-    if (error.name === "ValidationError") {
-      return res.status(400).json({ errors: error.errors });
-    }
-    console.log(error);
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao buscar médicos por especialidade." });
   }
 };
 
 module.exports = {
-  validateEspecialidade,
+  getMedicosPorEspecialidade,
 };
