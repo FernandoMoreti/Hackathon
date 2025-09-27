@@ -12,7 +12,7 @@ const authorizationRoutes = require('./routes/authorization'); // Rota de autori
 app.use(cors());
 app.use(express.json());
 
-// Rotas específicas primeiro (para não serem sobrescritas pelas gerais)
+// Rotas específicas primeiro
 app.use('/api/chat', chatRoutes);
 app.use('/api/autorizacao', authorizationRoutes);
 

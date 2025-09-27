@@ -31,7 +31,7 @@ export default function ChatContainer() {
   };
 
   return (
-    <div className="flex flex-col h-[500px] w-[300px] bg-white rounded-xl shadow-md overflow-hidden text-black">
+    <div className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden text-black h-screen">
       <div className="p-4 border-b border-gray-200 font-semibold">Chatbox</div>
 
       <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2">
