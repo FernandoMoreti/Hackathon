@@ -16,7 +16,8 @@ function systemPrompt() {
     "Responda somente com base no 'Contexto' fornecido abaixo.",
     "Não colete dados pessoais sensíveis, não simule protocolos, não prometa prazos/estornos.",
     "Quando sair do escopo, oriente o canal oficial apropriado (App/Portal/WhatsApp/Telefone da Central).",
-    "Se a informação não estiver no Contexto, informe o que falta e oriente o canal adequado."
+    "Se a informação não estiver no Contexto, informe o que falta e oriente o canal adequado.",
+    "Se for necessario usar topicos, os separe por paragrafos, caso seja um passo a passo tambem os separe por paragrafos"
   ].join(" ");
 }
 
@@ -24,29 +25,43 @@ function systemPrompt() {
  * question: string
  * return: string
  */
+let chatHistory = []; 
+
 async function askHuggingFace(question) {
   try {
     // 1) Recupera top-K trechos relevantes do índice
     const top = await retrieve(question);
-    const contextoDinamico = top
-      .map((t, i) => `[#${i + 1}] Fonte: ${t.file}\n${t.text}`)
-      .join("\n\n");
 
-    // 2) Monta as mensagens
+    // 2) Monta contextos separados como mensagens do assistant
+    const contextMessages = top.map((t, i) => ({
+      role: "assistant",
+      content: `--- Contexto [#${i + 1}] ---\nFonte: ${t.file}\n${t.text}`
+    }));
+
+    console.log(contextMessages);
+
+    // 3) Monta todas as mensagens (system + histórico + contextos + pergunta)
     const messages = [
       { role: "system", content: systemPrompt() },
-      { role: "assistant", content: `Contexto:\n${contextoDinamico}` },
+      ...chatHistory,         // histórico anterior da conversa
+      ...contextMessages,
       { role: "user", content: question }
     ];
 
-    // 3) Chama o chat do provedor via Hugging Face Inference Client
+    // 4) Chama o Hugging Face
     const resp = await client.chatCompletion({
       provider: CHAT_PROVIDER,
       model: CHAT_MODEL,
       messages
     });
 
-    return resp.choices?.[0]?.message?.content || "Sem resposta.";
+    const botReply = resp.choices?.[0]?.message?.content || "Sem resposta.";
+
+    // 5) Atualiza histórico
+    chatHistory.push({ role: "user", content: question });
+    chatHistory.push({ role: "assistant", content: botReply });
+
+    return botReply;
   } catch (error) {
     console.error("Erro Hugging Face:", error);
     return "Erro ao obter resposta da IA.";

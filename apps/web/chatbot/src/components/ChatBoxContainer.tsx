@@ -10,6 +10,7 @@ export type Message = {
 export default function ChatContainer() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -21,13 +22,33 @@ export default function ChatContainer() {
     scrollToBottom(); 
   }, [messages]);
 
-  
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
 
-    const newMessage: Message = { text: input, from: "user" };
-    setMessages([...messages, newMessage]);
+    // Mensagem do usuário
+    const userMessage: Message = { text: input, from: "user" };
+    setMessages(prev => [...prev, userMessage]);
     setInput("");
+
+    try {
+      const response = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: input }),
+      });
+
+      const data = await response.json();
+
+      console.log(data)
+
+      // Mensagem do bot
+      const botMessage: Message = { text: data.response, from: "bot" };
+      setMessages(prev => [...prev, botMessage]);
+    } catch (err) {
+      console.error(err);
+      const errorMessage: Message = { text: "Erro ao enviar mensagem", from: "bot" };
+      setMessages(prev => [...prev, errorMessage]);
+    }
   };
 
   return (
