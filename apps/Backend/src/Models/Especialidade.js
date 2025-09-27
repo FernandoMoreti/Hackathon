@@ -12,37 +12,6 @@ const Especialidade = sequelize.define('Especialidade', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    cpf: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    phone: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    dtBirthday: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-    },
-    active: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-    },
-    id_medico: {
-        type: DataTypes.UUID,
-        references: {
-            model: 'tb_medico',
-            key: 'id',
-        }
-    },
 }, {
     tableName: 'tb_especialidade',
     timestamps: false,
