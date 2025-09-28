@@ -2,55 +2,45 @@
 const pdfParse = require('pdf-parse');
 const { Auditoria, Autorizacao } = require('../Models');
 const { Op } = require('sequelize');
+const { getCategoriaByNameOrCode, normalize } = require('../utils/catalogoProcedimentos');
+const crypto = require('crypto');
 
-/* =========================
-   Helpers
-========================= */
-function normalizar(txt = '') {
-  return txt
-    .toLowerCase()
-    .normalize('NFD')               // remove acentos
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, ' ')           // colapsa espaços
-    .trim();
-}
-
+/* ========= helpers ========= */
 function addDays(baseDate, days) {
   const d = new Date(baseDate);
   d.setDate(d.getDate() + days);
-  // retorna apenas data (YYYY-MM-DD) para o campo DATEONLY
-  return d.toISOString().slice(0, 10);
+  return d;
+}
+function toDateOnlyStr(d) {
+  return d.toISOString().slice(0, 10); // YYYY-MM-DD
 }
 
-function gerarProtocolo(tipo = 'GERAL') {
-  const now = new Date();
-  const ymd = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const rand = Math.floor(1000 + Math.random() * 9000);
-  return `DEMO-${tipo}-${ymd}-${rand}`;
+// Protocolo numérico aleatório (sem usar código do BD)
+async function gerarProtocoloRandom(digits = 12) {
+  const randDigits = () =>
+    Array.from(crypto.randomBytes(digits))
+      .map(b => (b % 10).toString())
+      .join('')
+      .slice(0, digits);
+
+  for (let i = 0; i < 5; i++) {
+    const candidate = randDigits();
+    const exists = await Autorizacao.count({ where: { protocolo: candidate } });
+    if (!exists) return candidate;
+  }
+  return `${Date.now()}${Math.floor(Math.random() * 1e6).toString().padStart(6, '0')}`;
 }
 
-/**
- * Tenta localizar o procedimento no tb_auditoria
- *  - 1º: match exato (procedimento / terminologia)
- *  - 2º: match flexível (LIKE %texto%)
- *  - 3º: fallback JS por normalização (se quiser ser mais tolerante)
- */
-async function encontrarProcedimento(descricaoExame) {
-  const texto = descricaoExame?.trim();
+// Busca no BD: exato -> like
+async function encontrarNoBD(descricao) {
+  const texto = (descricao || '').trim();
   if (!texto) return null;
 
-  // 1) exato (sensível a diferenças de maiúsculas/acentos do banco)
   let proc = await Auditoria.findOne({
-    where: {
-      [Op.or]: [
-        { procedimento: texto },
-        { terminologiaProcedimentos: texto },
-      ],
-    },
+    where: { [Op.or]: [{ procedimento: texto }, { terminologiaProcedimentos: texto }] },
   });
   if (proc) return proc;
 
-  // 2) LIKE (case-insensitive, cobre abreviações/partes)
   proc = await Auditoria.findOne({
     where: {
       [Op.or]: [
@@ -59,72 +49,85 @@ async function encontrarProcedimento(descricaoExame) {
       ],
     },
   });
-  if (proc) return proc;
-
-  // 3) fallback: normaliza e compara em JS (evita dependência de extensão do banco)
-  //    traz apenas um conjunto pequeno por performance; ajuste se necessário
-  const candidatos = await Auditoria.findAll({
-    attributes: ['id', 'codigo', 'procedimento', 'terminologiaProcedimentos', 'tipoauditoria'],
-    limit: 200,
-  });
-
-  const alvo = normalizar(texto);
-  let melhor = null;
-  for (const c of candidatos) {
-    const p1 = normalizar(c.procedimento || '');
-    const p2 = normalizar(c.terminologiaProcedimentos || '');
-    if (p1 === alvo || p2 === alvo || p1.includes(alvo) || p2.includes(alvo)) {
-      melhor = c;
-      break;
-    }
-  }
-  return melhor;
+  return proc;
 }
 
-/* =========================
-   Controller principal
-========================= */
+// Heurística para descartar linhas de ruído (nomes, CRM, cabeçalhos, etc.)
+function isLinhaRuido(raw) {
+  const s = raw.trim();
+  const n = normalize(s);
+
+  // Cabeçalhos/atores do fluxograma e afins
+  const lixoCabecalho = /^(atencao|quem:|como:|tempo:|whatsapp|aguardar|processo|monitorar|informar ao|procedimento tem cobertura\?|auditoria\?)\b/;
+  if (lixoCabecalho.test(n)) return true;
+
+  // CRM do médico
+  if (/\bcrm\b\s*[:\-]?\s*\d{3,}/i.test(s)) return true;
+
+  // Dr/Dra/Médico
+  if (/^\s*(dr\.?|dra\.?|m[eé]dico|medico|m[eé]dica|medica)\b/i.test(s)) return true;
+
+  // Linha começando com letra curta + bullet (ex.: "D • Fulano", "D • ...")
+  if (/^[A-Za-zÀ-ÿ]{1,3}\s*[•\u2022\-]\s*/.test(s)) return true;
+
+  // Linhas muito curtas
+  if (n.length < 3) return true;
+
+  return false;
+}
+
+// Limpa lixo + dedup
+function extrairExames(textoFiltrado) {
+  const linhas = textoFiltrado
+    .split('\n')
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  const candidatas = linhas.filter((l) => !isLinhaRuido(l));
+
+  const seen = new Set();
+  const exames = [];
+  for (const l of candidatas) {
+    const key = normalize(l);
+    if (!seen.has(key)) {
+      seen.add(key);
+      exames.push(l);
+    }
+  }
+  return exames;
+}
+
+/* ========= controller ========= */
 exports.uploadPDF = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado' });
+
+    const now = new Date();
+    const dataSolicitacaoStr = toDateOnlyStr(now);
 
     const pdfBuffer = req.file.buffer;
     const pdfData = await pdfParse(pdfBuffer);
     const texto = pdfData.text || '';
 
-    // ====== Mesma estratégia que você já usava para cortar o bloco de exames ======
+    // Recorte do bloco de exames (sua lógica original)
     const regexExames = /exames?\s+laborat[óo]riais?/i;
     const regexData = /d\s*ata\s*:\s*\d{2}\/\d{2}\/\d{4}/i;
-
     let textoFiltrado = '';
-    const matchExames = texto.match(regexExames);
-
-    if (matchExames) {
-      textoFiltrado = texto.substring(matchExames.index + matchExames[0].length).trim();
+    const m1 = texto.match(regexExames);
+    if (m1) {
+      textoFiltrado = texto.substring(m1.index + m1[0].length).trim();
     } else {
-      const matchData = texto.match(regexData);
-      if (matchData) {
-        textoFiltrado = texto.substring(matchData.index + matchData[0].length).trim();
-      } else {
-        textoFiltrado = texto.trim();
-      }
+      const m2 = texto.match(regexData);
+      textoFiltrado = m2 ? texto.substring(m2.index + m2[0].length).trim() : texto.trim();
     }
 
-    // Quebra em linhas → remove vazios → remove possíveis rodapés (mesma lógica do slice)
-    const linhas = textoFiltrado
-      .split('\n')
-      .map((p) => p.trim())
-      .filter((p) => p.length > 0);
-
-    const examesExtraidos = linhas.slice(0, -2); // mantenho seu comportamento original
-
-    // ====== Processamento contra o banco + criação de autorização ======
+    const examesExtraidos = extrairExames(textoFiltrado);
     const mensagens = [];
 
     for (const exame of examesExtraidos) {
-      const proc = await encontrarProcedimento(exame);
+      const procBD = await encontrarNoBD(exame);
 
-      // estrutura base que será gravada na tb_autorizacao
+      // dados base para persistir
       const autorizacao = {
         descricao_exame: exame,
         tem_cobertura: false,
@@ -138,73 +141,82 @@ exports.uploadPDF = async (req, res) => {
         prazo_retorno: null, // DATEONLY
       };
 
-      if (!proc) {
-        // não achou no Rol → sem cobertura
-        autorizacao.status = 'negado_sem_cobertura';
-        autorizacao.motivo = 'Procedimento não encontrado no Rol';
-        mensagens.push({
-          exame,
-          status: 'negado_sem_cobertura',
-          mensagem: `❌ "${exame}": não encontrado no Rol (sem cobertura).`,
-        });
-      } else {
-        // achou no Rol
-        autorizacao.tem_cobertura = true;
-        autorizacao.codigo = proc.codigo?.toString() || null;
-        autorizacao.procedimento = proc.procedimento || proc.terminologiaProcedimentos || exame;
+      // Nome e código (se vierem do BD)
+      const codigoBD = procBD?.codigo != null ? String(procBD.codigo) : null;
+      const nomeBD = procBD?.procedimento || procBD?.terminologiaProcedimentos || null;
 
-        const flag = (proc.tipoauditoria || '').toString().toUpperCase();
+      // Classificação via planilhas (fonte do prazo)
+      const categoria = getCategoriaByNameOrCode({
+        name: nomeBD || exame,
+        code: codigoBD,
+      });
 
-        if (!flag) {
-          // cobertura sem auditoria/OPME
-          autorizacao.status = 'autorizado_imediato';
-          mensagens.push({
-            exame,
-            status: 'autorizado_imediato',
-            mensagem: `✅ "${autorizacao.procedimento}": autorizado imediatamente.`,
-          });
-        } else if (flag.includes('OPME')) {
-          // OPME → 10 dias
-          autorizacao.eh_opme = true;
-          autorizacao.requer_auditoria = true;
-          autorizacao.status = 'em_auditoria';
-          autorizacao.protocolo = gerarProtocolo('OPME');
-          autorizacao.prazo_retorno = addDays(new Date(), 10);
-          mensagens.push({
-            exame,
-            status: 'em_auditoria',
-            mensagem: `🕒 "${autorizacao.procedimento}": OPME — retorno em até 10 dias. Protocolo (exemplo): ${autorizacao.protocolo}.`,
-          });
-        } else if (flag.includes('AUD')) {
-          // Auditoria → 5 dias
-          autorizacao.requer_auditoria = true;
-          autorizacao.status = 'em_auditoria';
-          autorizacao.protocolo = gerarProtocolo('AUD');
-          autorizacao.prazo_retorno = addDays(new Date(), 5);
-          mensagens.push({
-            exame,
-            status: 'em_auditoria',
-            mensagem: `🕒 "${autorizacao.procedimento}": em auditoria — retorno em até 5 dias. Protocolo (exemplo): ${autorizacao.protocolo}.`,
-          });
-        } else {
-          // caso venha algo inesperado em tipoAuditoria — trata como auditoria padrão (5 dias)
-          autorizacao.requer_auditoria = true;
-          autorizacao.status = 'em_auditoria';
-          autorizacao.protocolo = gerarProtocolo('AUD');
-          autorizacao.prazo_retorno = addDays(new Date(), 5);
-          mensagens.push({
-            exame,
-            status: 'em_auditoria',
-            mensagem: `🕒 "${autorizacao.procedimento}": encaminhado para análise — retorno em até 5 dias. Protocolo (exemplo): ${autorizacao.protocolo}.`,
-          });
-        }
+      // Se não achou no BD nem nas planilhas, pular (não transformar lixo em mensagem)
+      if (!procBD && !categoria) {
+        continue;
       }
 
-      // persiste o resultado da análise
+      const nome = nomeBD || exame;
+      const codigo = codigoBD || null;
+
+      autorizacao.tem_cobertura = true;
+      autorizacao.codigo = codigo;
+      autorizacao.procedimento = nome;
+
+      if (categoria === 'OPME') {
+        // OPME -> 10 dias + protocolo aleatório
+        autorizacao.eh_opme = true;
+        autorizacao.requer_auditoria = true;
+        autorizacao.status = 'em_auditoria';
+        const dt = addDays(now, 10);
+        autorizacao.prazo_retorno = toDateOnlyStr(dt);
+        autorizacao.protocolo = await gerarProtocoloRandom();
+
+        mensagens.push({
+          mensagem: `🕒 "${nome}": OPME — retorno em até 10 dias. Protocolo (exemplo): ${autorizacao.protocolo}.`,
+          status: 'em_auditoria',
+          procedimento: nome,
+          codigo,
+          protocolo: autorizacao.protocolo,
+          data_solicitacao: dataSolicitacaoStr,
+          prazo_retorno: autorizacao.prazo_retorno,
+        });
+      } else if (categoria === 'AUDITORIA') {
+        // AUDITORIA -> 5 dias + protocolo aleatório
+        autorizacao.requer_auditoria = true;
+        autorizacao.status = 'em_auditoria';
+        const dt = addDays(now, 5);
+        autorizacao.prazo_retorno = toDateOnlyStr(dt);
+        autorizacao.protocolo = await gerarProtocoloRandom();
+
+        mensagens.push({
+          mensagem: `🕒 "${nome}": em auditoria — retorno em até 5 dias. Protocolo (exemplo): ${autorizacao.protocolo}.`,
+          status: 'em_auditoria',
+          procedimento: nome,
+          codigo,
+          protocolo: autorizacao.protocolo,
+          data_solicitacao: dataSolicitacaoStr,
+          prazo_retorno: autorizacao.prazo_retorno,
+        });
+      } else {
+        // ROL -> autorizado imediato (sem retorno, sem protocolo)
+        autorizacao.status = 'autorizado_imediato';
+
+        mensagens.push({
+          mensagem: `✅ "${nome}": autorizado imediatamente.`,
+          status: 'autorizado_imediato',
+          procedimento: nome,
+          codigo,
+          protocolo: null,
+          data_solicitacao: dataSolicitacaoStr,
+          prazo_retorno: null,
+        });
+      }
+
+      // Persiste decisão
       await Autorizacao.create(autorizacao);
     }
 
-    // resposta pronta para o front/chatbot
     return res.json({ mensagens });
 
   } catch (err) {
