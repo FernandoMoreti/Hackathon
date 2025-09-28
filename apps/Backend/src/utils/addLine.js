@@ -1,6 +1,6 @@
 const xlsx = require("xlsx");
-const sequelize = require("./Config/database"); // seu arquivo de conexão
-const Auditoria = require("./Models/Auditoria"); // seu modelo
+const sequelize = require("../Config/database"); // seu arquivo de conexão
+const Auditoria = require("../Models/Auditoria"); // seu modelo
 
 async function importarExcel(caminhoArquivo) {
   try {
@@ -32,7 +32,7 @@ async function importarExcel(caminhoArquivo) {
         subgrupo: row['SUBGRUPO'],
         grupo: row['GRUPO'],
         capitulo: row['CAPÍTULO'],
-        tipoAuditoria: "OPME" // Valor fixo conforme solicitado,
+        tipoAuditoria: "Auditoria" // Valor fixo conforme solicitado,
     }));
 
     // Insere todos os dados em lote
@@ -47,6 +47,6 @@ async function importarExcel(caminhoArquivo) {
 }
 
 // Chame a função passando o caminho do Excel
-importarExcel("./src/opme.xlsx");
+importarExcel("./src/assets/auditoria.xlsx");
 
 
