@@ -44,7 +44,7 @@ const Auditoria = sequelize.define('Auditoria', {
   subgrupo: { type: DataTypes.TEXT, allowNull: true, field: 'subgrupo' },
   grupo: { type: DataTypes.TEXT, allowNull: true, field: 'grupo' },
   capitulo: { type: DataTypes.TEXT, allowNull: true, field: 'capitulo' },
-  tipoAuditoria: { 
+  tipoauditoria: { 
     type: DataTypes.STRING, 
     allowNull: true, 
     field: 'tipoAuditoria', // exato como está no banco

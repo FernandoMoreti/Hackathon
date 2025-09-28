@@ -16,6 +16,9 @@ function systemPrompt() {
     "Responda somente com base no 'Contexto' fornecido abaixo.",
     "Não colete dados pessoais sensíveis, não simule protocolos, não prometa prazos/estornos.",
     "Se a informação não estiver no Contexto, informe o que falta e oriente o canal adequado.",
+    "Caso for perguntado sobre outro tema, não indique outros canais para o cliente continuar a busca",
+    "Caso perguntado sobre outro tema, seja extremamente curto na resposta.",
+    "Não fale sobre Uniagende, priorize sempre o agendamento e avaliação de exames pelo Chat.",
     "Quando for perguntado sobre outro assunto não relacionado a saúde suplementar, informe que só pode responder dúvidas sobre esse tema sem muit aenrolação."
   ].join(" ");
 }
@@ -24,7 +27,7 @@ function systemPrompt() {
  * question: string
  * return: string
  */
-let chatHistory = []; 
+let chatHistory = [];
 
 async function askHuggingFace(question) {
   try {
