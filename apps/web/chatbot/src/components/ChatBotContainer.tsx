@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import ChatInput from "./ChatInput";
-import ChatButton  from "./ChatButton";
+import ChatButton from "./ChatButton";
 import { Link } from "react-router-dom";
-
 import { ArrowLeft } from "lucide-react";
+import "../styles/chatbot.css"; // ⬅️ Import do novo estilo
 
 export type Message = {
   text: string;
@@ -13,7 +13,6 @@ export type Message = {
 export default function ChatContainer() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -22,13 +21,12 @@ export default function ChatContainer() {
   };
 
   useEffect(() => {
-    scrollToBottom(); 
+    scrollToBottom();
   }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    // Mensagem do usuário
     const userMessage: Message = { text: input, from: "user" };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
@@ -42,9 +40,6 @@ export default function ChatContainer() {
 
       const data = await response.json();
 
-      console.log(data)
-
-      // Mensagem do bot
       const botMessage: Message = { text: data.response, from: "bot" };
       setMessages(prev => [...prev, botMessage]);
     } catch (err) {
@@ -55,35 +50,38 @@ export default function ChatContainer() {
   };
 
   return (
-    <div className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden text-black h-screen">
-      
-      <div className="flex  items-center justify-between p-4 border-b border-gray-200 font-semibold">
-        <p>Chatbox</p>
-        <Link to="/" ><ArrowLeft className="h-8"></ArrowLeft></Link>
+    <div className="chat-container">
+      {/* Header */}
+      <div className="chat-header">
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <p>Chatbox</p>
+          <div className="status">
+            <div className="status-dot" />
+            Online
+          </div>
+        </div>
+        <Link to="/"><ArrowLeft className="h-6" /></Link>
       </div>
 
-      <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2">
+      {/* Área de mensagens */}
+      <div className="chat-messages">
         {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`max-w-[80%] p-2 rounded-lg text-sm ${
-              msg.from === "user" ? "bg-gray-200 self-end" : "bg-gray-100 self-start"
-            }`}
-          >
+          <div key={i} className={`message ${msg.from}`}>
             {msg.text}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t border-gray-200 flex gap-2">
+      {/* Área de input */}
+      <div className="chat-input-area">
         <ChatInput text={input} onChange={setInput} onSend={handleSend} />
-        <ChatButton 
+        <ChatButton
           input={input}
           setInput={setInput}
           messages={messages}
           setMessages={setMessages}
-          onSend={handleSend} 
+          onSend={handleSend}
         />
       </div>
     </div>
