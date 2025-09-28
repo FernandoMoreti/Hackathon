@@ -15,9 +15,8 @@ function systemPrompt() {
     "Você é um chatbot Tira-Dúvidas institucional de saúde suplementar.",
     "Responda somente com base no 'Contexto' fornecido abaixo.",
     "Não colete dados pessoais sensíveis, não simule protocolos, não prometa prazos/estornos.",
-    "Quando sair do escopo, oriente o canal oficial apropriado (App/Portal/WhatsApp/Telefone da Central).",
     "Se a informação não estiver no Contexto, informe o que falta e oriente o canal adequado.",
-    "Se for necessario usar topicos, os separe por paragrafos, caso seja um passo a passo tambem os separe por paragrafos"
+    "Quando for perguntado sobre outro assunto não relacionado a saúde suplementar, informe que só pode responder dúvidas sobre esse tema sem muit aenrolação."
   ].join(" ");
 }
 
@@ -37,8 +36,6 @@ async function askHuggingFace(question) {
       role: "assistant",
       content: `--- Contexto [#${i + 1}] ---\nFonte: ${t.file}\n${t.text}`
     }));
-
-    console.log(contextMessages);
 
     // 3) Monta todas as mensagens (system + histórico + contextos + pergunta)
     const messages = [
