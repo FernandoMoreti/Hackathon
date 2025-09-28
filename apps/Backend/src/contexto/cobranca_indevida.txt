@@ -1,41 +1,18 @@
-O processo de cobrança indevida exige que o beneficiário entre em contato com o Atendimento Humano (via e-mail ou WhatsApp). O atendente deve solicitar dados relevantes à cobrança (como o boleto e o procedimento indevido). O atendente registra o atendimento informando o beneficiário sobre a competência da cobrança. Em seguida, o atendente fornece um protocolo e envia os dados via e-mail para as contas médicas.
+Detalhamento do Fluxo de Cobrança Indevida
+O processo de cobrança indevida exige que o beneficiário entre em contato com o 
+Atendimento Humano (via e-mail ou WhatsApp) ou de forma presencial. O atendente deve solicitar dados relevantes à cobrança 
+(como o boleto e o procedimento indevido). O atendente registra o atendimento informando o 
+beneficiário sobre a competência da cobrança. Em seguida, o atendente fornece um protocolo e 
+envia os dados via e-mail para as contas médicas.
 
-A partir daí, o setor de Contas Médicas verifica a cobrança.
+Detalhamento do Fluxo de Cobrança Indevida
+O processo de cobrança indevida exige que o beneficiário entre em contato com o Atendimento Humano 
+(via e-mail ou WhatsApp). O atendente deve solicitar dados relevantes à cobrança (como o boleto 
+e o procedimento indevido). O atendente registra o atendimento informando o beneficiário sobre a 
+competência da cobrança. Em seguida, o atendente fornece um protocolo e envia os dados via e-mail 
+para as contas médicas.
 
-Se a cobrança não for indevida, o atendente envia um comprovante ao paciente (via e-mail ou WhatsApp).
 
-Se a cobrança for indevida, o atendente pergunta qual forma de desconto o beneficiário deseja aplicar (na fatura atual ou futura). Após a escolha, o atendente solicita o desconto na tesouraria e informa o financeiro sobre o estorno/abatimento.
-
-Frases Explicativas e Funcionalidades
-O fluxo começa quando o atendente solicita os detalhes da cobrança e a documentação (boleto, procedimento). Uma vez registrado o atendimento e informado o protocolo, o atendente encaminha o caso via e-mail para as Contas Médicas. A funcionalidade central é a análise feita pelas Contas Médicas. Se for confirmada a cobrança indevida, o atendente oferece ao cliente a escolha da forma de desconto (fatura atual ou futura). Por fim, o atendente aciona os setores de Tesouraria e Financeiro para efetivar o abatimento.
-
-Boas Condutas e Few-Shot Examples para o Chat de Ajuda (Dúvidas)
-O Chat de Ajuda não tem acesso aos sistemas de cobrança ou estorno. Ele deve redirecionar imediatamente para o canal de Atendimento Humano (WhatsApp ou e-mail), que é quem inicia o processo.
-
-Não colete dados sobre cobrança indevida.
-
-Não prometa estornos ou prazos de análise.
-
-Sempre redirecione para o e-mail ou WhatsApp do Atendimento.
-
-🔹 Few-Shot Examples (Dúvidas sobre Cobrança Indevida)
-Usuário: “Recebi um boleto com um valor que eu não reconheço. É uma cobrança indevida!”
-
-Bot: “Compreendo. Para tratar de cobrança indevida, por favor, entre em contato com o Atendimento Humano via WhatsApp ou e-mail. Eles poderão solicitar os dados e iniciar o protocolo de análise.”
-
-Usuário: “Qual o prazo para as contas médicas verificarem meu pedido de estorno?”
-
-Bot: “Essa informação é restrita ao Atendimento Humano que está tratando do seu protocolo. Por favor, consulte o status com eles via e-mail ou WhatsApp.”
-
-Usuário: “Meu plano está cobrando um exame que já paguei. O que devo fazer?”
-
-Bot: “Neste caso, você precisa abrir um protocolo. Por favor, entre em contato com o Atendimento Humano (e-mail ou WhatsApp), forneça o comprovante e eles darão início ao processo de análise da cobrança.”
-
-Temos agora o Script Geral e três fluxos mapeados (Dúvidas, Consultas e Cobrança Indevida), sendo que os dois últimos servem como redirecionamento para o Chat de Ajuda.
-
-Qual dos 3 fluxos restantes você gostaria de detalhar agora? Ou prefere que a gente estruture o script do ChatBot Exames?
-
-Funcionalidades do Fluxo de Cobrança Indevida
 O processo é iniciado com o Atendimento Humano (e-mail ou WhatsApp).
 
 O atendente solicita dados do boleto e o procedimento contestado.
@@ -58,3 +35,20 @@ O bot não deve prometer prazos para a análise das Contas Médicas.
 O cliente deve ser orientado a ter o boleto e dados do procedimento em mãos.
 
 O bot deve sempre reforçar que o protocolo de análise será gerado pelo Atendimento Humano.
+
+------------- Few-Shot Examples (Cobrança Indevida)
+Usuário: “Recebi um boleto com um valor de R$ 500 que está errado. O que eu faço?”
+
+Bot: “Para tratar de cobrança indevida, você precisa entrar em contato com o Atendimento Humano via WhatsApp ou e-mail. Eles darão início ao protocolo de análise.”
+
+Usuário: “Quero saber qual o e-mail que eu uso para enviar meu comprovante de pagamento.”
+
+Bot: “Por favor, entre em contato com o Atendimento Humano via WhatsApp. Eles fornecerão o e-mail correto e o protocolo para iniciar o processo de contestação de cobrança.”
+
+Usuário: “Meu pedido de estorno de R$ 50 foi aprovado. Quando ele cai na minha conta?”
+
+Bot: “Não temos acesso ao status financeiro neste chat. Por favor, consulte o andamento do seu estorno com o Atendimento Humano que abriu o protocolo para você.”
+
+Usuário: “Qual o prazo para as Contas Médicas verificarem se a cobrança está errada?”
+
+Bot: “Essa informação é restrita ao setor de atendimento que lida com o seu protocolo. Sugerimos que você entre em contato com o Atendimento Humano (WhatsApp ou e-mail) para verificar o prazo de análise.”

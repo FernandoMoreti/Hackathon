@@ -1,57 +1,23 @@
-Detalhamento do Fluxo de Atualização Cadastral
-A atualização de dados cadastrais é realizada exclusivamente via WhatsApp, com a intervenção de um atendente humano. O beneficiário inicia o processo fornecendo as informações necessárias, como o CPF e os dados a serem atualizados (ex: endereço, telefone). Em seguida, o beneficiário precisa enviar a documentação comprobatória (ex: comprovante de residência). Após o envio, o processo aguarda o atendimento humano, que é quem irá verificar as informações e conferir a documentação. Se as informações estiverem corretas, o atendente realiza a atualização no sistema (CRM). Caso contrário, ele informa o beneficiário sobre o erro ou a pendência, também via WhatsApp.
+---------------Detalhamento do Fluxo de Atualização Cadastral
+A atualização de dados cadastrais é realizada exclusivamente via WhatsApp, 
+com a intervenção de um atendente humano. O beneficiário inicia o processo fornecendo as informações necessárias, 
+como o CPF e os dados a serem atualizados (ex: endereço, telefone). 
+Em seguida, o beneficiário precisa enviar a documentação comprobatória (ex: comprovante de residência). Após o envio, 
+o processo aguarda o atendimento humano, que é quem irá verificar as informações e conferir a documentação. 
+Se as informações estiverem corretas, o atendente realiza a atualização no sistema (CRM). 
+Caso contrário, ele informa o beneficiário sobre o erro ou a pendência, também via WhatsApp.
 
-Frases Explicativas e Funcionalidades
-O fluxo de atualização cadastral é iniciado quando o beneficiário fornece os dados a serem alterados e anexa a documentação de suporte. Este processo é mediado pelo atendimento humano. O atendente tem o papel de conferir os documentos e verificar se as informações estão corretas. Se tudo estiver certo, ele realiza a atualização dos dados no sistema (CRM). A funcionalidade-chave é a verificação humana da documentação comprobatória para garantir a segurança e a precisão da atualização. Se houver qualquer erro na documentação, o atendente informa o beneficiário para que a correção seja feita, garantindo a conclusão do processo.
+O fluxo de atualização cadastral é iniciado quando o beneficiário fornece os dados a serem alterados e anexa a documentação 
+de suporte. Este processo é mediado pelo atendimento humano. O atendente tem o papel de conferir os documentos e verificar 
+se as informações estão corretas. Se tudo estiver certo, ele realiza a atualização dos dados no sistema (CRM). 
+A funcionalidade-chave é a verificação humana da documentação comprobatória para garantir a segurança e a precisão da atualização. 
+Se houver qualquer erro na documentação, o atendente informa o beneficiário para que a correção seja feita, garantindo a conclusão 
+do processo.
 
-Boas Condutas e Few-Shot Examples para o Chat de Ajuda (Dúvidas)
-O Chat de Ajuda deve ser treinado para não receber dados pessoais para atualização e sempre redirecionar para o WhatsApp do Atendimento Humano, pois é lá que ocorre a conferência de documentos e a atualização via CRM.
-
-Exemplo de Redirecionamento para Atualização:
-
-Usuário: "Quero mudar o meu endereço, como faço?"
-
-Bot: "A atualização cadastral é feita por segurança com o Atendimento Humano. Por favor, envie seu pedido e a documentação comprobatória via WhatsApp para que a equipe possa conferir e realizar a atualização no CRM."
-
-Exemplo de Dúvida sobre Documentos:
-
-Usuário: "Que tipo de documento eu preciso mandar para mudar meu telefone?"
-
-Bot: "Você precisará enviar um documento de identificação e, dependendo do dado, um comprovante (como o de residência). Para mais detalhes sobre a documentação, entre em contato com o Atendimento Humano via WhatsApp."
-
-Exemplo de Dúvida sobre Prazo/Status:
-
-Usuário: "Mandei o comprovante ontem, já atualizaram?"
-
-Bot: "Não tenho acesso ao status de atualização neste chat. Por favor, entre em contato com o Atendimento Humano via WhatsApp para verificar o andamento do seu pedido."
-
-Funcionalidades do Fluxo de Atualização Cadastral
 A atualização cadastral é feita via WhatsApp.
 
-O beneficiário fornece os dados e envia a documentação comprobatória.
+O beneficiário fornece os dados e envia a documentação comprobatória. (pode ser para modificar endereço, nome, status, nível do convênio)
 
 O processo exige atendimento e conferência humana dos documentos.
 
 O atendente usa o CRM para realizar a atualização.
-
-Se a documentação estiver incorreta, o atendente informa o beneficiário para correção.
-
-A segurança é garantida pela verificação humana dos comprovantes.
-
-Diretrizes do Chat de Ajuda (Dúvidas) – Atualização Cadastral
-Não colete dados nem documentos para atualização.
-
-Sua função é redirecionar para o canal correto (WhatsApp).
-
-Não invente prazos de conclusão para a atualização.
-
-Em caso de dúvidas sobre documentos, redirecione para o WhatsApp do Atendimento Humano.
-
-Para perguntas sobre status, informe que não há acesso no Chat de Ajuda.
-
-
-
-
-
-
-
