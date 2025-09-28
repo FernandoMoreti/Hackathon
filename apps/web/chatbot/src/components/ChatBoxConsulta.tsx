@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import ChatInput from "./ChatInput";
 import ChatButton from "./ChatButton";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
+
 import { ArrowLeft } from "lucide-react";
-import "../styles/chatbot.css"; // ⬅️ Import do novo estilo
 
 export type Message = {
   text: string;
@@ -28,12 +28,12 @@ export default function ChatAgendamento() {
   const [cpf, setCpf] = useState("");
   const [pacienteId, setPacienteId] = useState("");
   const [especialidade, setEspecialidade] = useState("");
-  const [especialidades, setEspecialidades] = useState<any[]>([]);
+  const [especialidades, setEspecialidades] = useState([]);
   const [medico, setMedico] = useState("");
-  const [medicos, setMedicos] = useState<any[]>([]);
+  const [medicos, setMedicos] = useState([])
   const [medicoId, setMedicoId] = useState("");
   const [data, setData] = useState("");
-  const [datas, setDatas] = useState<string[]>([]);
+  const [datas, setDatas] = useState([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +51,7 @@ export default function ChatAgendamento() {
   const handleSend = async () => {
     if (!input.trim()) return;
 
+    // Mensagem do usuário
     const userMessage: Message = { text: input, from: "user" };
     setMessages((prev) => [...prev, userMessage]);
     const value = input.trim();
@@ -60,14 +61,16 @@ export default function ChatAgendamento() {
       case "cpf":
         setCpf(value);
         try {
-          const resp = await fetch(`http://localhost:8000/beneficiario?cpf=${value}`);
+          const resp = await fetch(
+            `http://localhost:8000/beneficiario?cpf=${value}`
+          );
           const data = await resp.json();
 
           if (!data || !data.user) {
             addBotMessage("CPF inválido, tente novamente.");
             return;
           }
-
+          
           addBotMessage("CPF validado");
           addBotMessage("Escolha uma especialidade:");
 
@@ -75,8 +78,9 @@ export default function ChatAgendamento() {
             addBotMessage(`${especialidade.id} - ${especialidade.name}`);
           });
 
-          setEspecialidades(data.data);
+          setEspecialidades(data.data)
           setPacienteId(data.user);
+
           setStep("especialidade");
         } catch (err) {
           console.error(err);
@@ -90,11 +94,10 @@ export default function ChatAgendamento() {
           const res = await fetch(`http://localhost:8000/especialidade?codigo=${value}`);
           const data = await res.json();
 
-          setMedicos(data.data);
-          addBotMessage("Selecione o médico: ");
-          data.data.map((m: { name: string }, i: number) =>
-            addBotMessage(`${i + 1} - ${m.name}`)
-          );
+          setMedicos(data.data)
+
+          addBotMessage("Selecione o médico: ")
+          data.data.map((m: { name: string; id: string }, i) => addBotMessage(`${i + 1} - ${m.name}`));
           setStep("medico");
         } catch (err) {
           console.error(err);
@@ -106,16 +109,13 @@ export default function ChatAgendamento() {
         setMedico(medicos[value - 1].name);
         setMedicoId(medicos[value - 1].id);
         try {
-          const res = await fetch(
-            `http://localhost:8000/disponibilidade?medicoId=${medicos[value - 1].id}`
-          );
+          const res = await fetch(`http://localhost:8000/disponibilidade?medicoId=${medicos[value - 1].id}`);
           const data = await res.json();
 
-          setDatas(data.datasDisponiveis);
-          addBotMessage("Escolha uma data disponível:");
-          data.datasDisponiveis.map((d: string, i: number) =>
-            addBotMessage(`${i + 1} - ${d}`)
-          );
+          setDatas(data.datasDisponiveis)
+
+          addBotMessage(`Escolha uma data disponível: `)
+          addBotMessage(data.datasDisponiveis.map((d: string, i) => addBotMessage(`${i + 1} - ${d}`)));
           setStep("data");
         } catch (err) {
           console.error(err);
@@ -160,38 +160,28 @@ export default function ChatAgendamento() {
   };
 
   return (
-
-    <div className="chat-container">
-      {/* Header */}
-      <div className="chat-header">
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <p>Agendamento</p>
-          <div className="status">
-            <div className="status-dot" />
-            Online
-          </div>
-        </div>
-        <Link to="/"><ArrowLeft className="h-6" /></Link>
-
     <div className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden text-black h-screen">
       <div className="flex  items-center justify-between p-4 border-b border-black font-semibold">
         <p>Chatbox</p>
         <Link to="/" ><ArrowLeft className="h-8"></ArrowLeft></Link>
       </div>
 
-      {/* Área de mensagens */}
-      <div className="chat-messages">
+
+      <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2">
         {messages.map((msg, i) => (
-          <div key={i} className={`message ${msg.from}`}>
+          <div
+            key={i}
+            className={`max-w-[80%] p-2 rounded-lg text-sm ${
+              msg.from === "user"
+                ? "bg-gray-200 self-end"
+                : "bg-gray-100 self-start"
+            }`}
+          >
             {msg.text}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-
-
-      {/* Área de input */}
-      <div className="chat-input-area">
 
       <div className="p-4 border-t border-black flex gap-2">
         <ChatInput text={input} onChange={setInput} onSend={handleSend} />
