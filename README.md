@@ -106,7 +106,7 @@ O **Tokenizados** é uma plataforma que integra um **Chatbot Inteligente com IA 
 
 ---
 
-## 👥 Equipe ([Nome da Equipe])
+## 👥 Equipe Tokenizados
 
 | Nome do Integrante | Contato | |
 | :--- | :--- | :--- |
