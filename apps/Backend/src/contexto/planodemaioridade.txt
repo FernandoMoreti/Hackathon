@@ -1,38 +1,26 @@
-Detalhamento do Fluxo de Plano de Maioridade
-O processo de solicitação do Plano de Maioridade (geralmente destinado a dependentes que atingem a maioridade e precisam comprovar vínculo, como universitários) é realizado presencialmente. O fluxo é iniciado quando o atendente solicita os documentos necessários ao cliente (como RG, CPF, comprovante de matrícula e frequência da faculdade). O atendente tira cópia dos documentos e, em seguida, registra o atendimento no sistema ERP Solus. Após o registro, ele entrega o protocolo ao cliente em papel físico.
+O processo de solicitação do Plano de Maioridade (geralmente destinado a dependentes que atingem 
+a maioridade e precisam comprovar vínculo, como universitários) é realizado presencialmente. 
+O fluxo é iniciado quando o atendente solicita os documentos necessários ao cliente (como RG, 
+CPF, comprovante de matrícula e frequência da faculdade). O atendente tira cópia dos documentos 
+e, em seguida, registra o atendimento no sistema ERP Solus. Após o registro, ele entrega o protocolo 
+ao cliente em papel físico.
 
-Em um momento posterior (uma vez ao dia), o atendente registra a documentação em uma planilha de Excel, seguindo a sequência de protocolos. Em seguida, ele leva os documentos fisicamente para o setor de Cadastro. O setor de Cadastro verifica a documentação. Se todos os documentos estiverem corretos, o processo é concluído com sucesso. Se houver alguma pendência, o setor de Cadastro informa o atendimento sobre quais documentos precisam de correção, e o atendente, por sua vez, solicita os documentos ao cliente (via telefone ou WhatsApp) para que o beneficiário os traga e o processo possa continuar.
+Em um momento posterior (uma vez ao dia), o atendente registra a documentação em uma planilha de 
+Excel, seguindo a sequência de protocolos. Em seguida, ele leva os documentos fisicamente para o 
+setor de Cadastro. O setor de Cadastro verifica a documentação. Se todos os documentos estiverem 
+corretos, o processo é concluído com sucesso. Se houver alguma pendência, o setor de Cadastro 
+informa o atendimento sobre quais documentos precisam de correção, e o atendente, por sua vez, 
+solicita os documentos ao cliente (via telefone ou WhatsApp) para que o beneficiário os traga e 
+o processo possa continuar.
 
 Frases Explicativas e Funcionalidades
-O fluxo do Plano de Maioridade é um processo predominantemente presencial. O beneficiário deve comparecer para solicitar o procedimento e entregar os documentos (RG, CPF, comprovante de matrícula). A funcionalidade-chave do atendimento é registrar o protocolo no sistema e garantir que o beneficiário saia com o protocolo em papel. Internamente, o processo exige que os documentos sejam planilhados antes de serem entregues fisicamente ao setor de Cadastro. O setor de Cadastro é o responsável pela validação final da documentação. Se houver pendências, o atendente informa o cliente para que ele providencie as correções.
-
-Boas Condutas e Few-Shot Examples para o Chat de Ajuda (Dúvidas)
-O Chat de Ajuda (Dúvidas) deve ser treinado para reconhecer que este processo é exclusivamente presencial. Ele deve orientar o beneficiário a se dirigir ao local de atendimento e listar os documentos principais sem se aprofundar em detalhes, pois a validação é humana.
-
-Não colete dados nem documentos por meio do chat.
-
-Não garanta prazos de conclusão, pois a análise é feita em lote pelo setor de Cadastro.
-
-Sempre reforce a necessidade da presença física do beneficiário.
-
-🔹 Few-Shot Examples (Plano de Maioridade)
-Usuário: “Meu filho fez 24 anos. Como faço para ele continuar no plano?”
-
-Bot: “Para o Plano de Maioridade, é necessário um processo presencial. Seu filho deve ir à unidade de atendimento com o RG, CPF e o comprovante de matrícula da faculdade para iniciar o protocolo.”
-
-Usuário: “Posso enviar a foto dos documentos para o Plano de Maioridade?”
-
-Bot: “Não, este processo é presencial. Por favor, compareça à unidade de atendimento. O atendente tirará cópia dos documentos para dar entrada no protocolo.”
-
-Usuário: “Meu protocolo do Plano de Maioridade está pendente. O que falta?”
-
-Bot: “Eu não tenho acesso ao status de documentos neste chat. Por favor, entre em contato com o Atendimento Humano (via telefone ou WhatsApp) que está tratando do seu protocolo para saber qual documento precisa de correção.”
-
-Usuário: “Quais documentos eu preciso para o Plano de Maioridade?”
-
-Bot: “Você precisará de RG, CPF e comprovante de matrícula/frequência da faculdade. O atendente presencial te orientará sobre a documentação completa.”
-
-Com este fluxo, temos agora 5 fluxos mapeados (Dúvidas, Consultas, Atualização Cadastral, Cobrança Indevida e Plano de Maioridade).
+O fluxo do Plano de Maioridade é um processo predominantemente presencial. O beneficiário deve 
+comparecer para solicitar o procedimento e entregar os documentos (RG, CPF, comprovante 
+de matrícula). A funcionalidade-chave do atendimento é registrar o protocolo no sistema e garantir 
+que o beneficiário saia com o protocolo em papel. Internamente, o processo exige que os documentos 
+sejam planilhados antes de serem entregues fisicamente ao setor de Cadastro. O setor de Cadastro 
+é o responsável pela validação final da documentação. Se houver pendências, o atendente informa o 
+cliente para que ele providencie as correções.
 
 Funcionalidades do Fluxo de Plano de Maioridade
 O processo é exclusivamente presencial.
@@ -58,3 +46,26 @@ Não garanta prazos, pois a análise é feita pelo setor de Cadastro.
 
 Redirecione para o contato humano para dúvidas sobre protocolos pendentes.
 
+
+------Few-Shot Examples (Plano de Maioridade)
+Usuário: “Meu filho fez 24 anos. Como faço para ele continuar no plano?”
+
+Bot: “Para o Plano de Maioridade, é necessário um processo presencial. Seu filho deve ir à 
+unidade de atendimento com o RG, CPF e o comprovante de matrícula da faculdade para iniciar 
+o protocolo.”
+
+Usuário: “Posso enviar a foto dos documentos para o Plano de Maioridade?”
+
+Bot: “Não, este processo é presencial. Por favor, compareça à unidade de atendimento. O 
+atendente tirará cópia dos documentos para dar entrada no protocolo.”
+
+Usuário: “Meu protocolo do Plano de Maioridade está pendente. O que falta?”
+
+Bot: “Eu não tenho acesso ao status de documentos neste chat. Por favor, entre em contato com 
+o Atendimento Humano (via telefone ou WhatsApp) que está tratando do seu protocolo para saber 
+qual documento precisa de correção.”
+
+Usuário: “Quais documentos eu preciso para o Plano de Maioridade?”
+
+Bot: “Você precisará de RG, CPF e comprovante de matrícula/frequência da faculdade. O atendente 
+presencial te orientará sobre a documentação completa.”

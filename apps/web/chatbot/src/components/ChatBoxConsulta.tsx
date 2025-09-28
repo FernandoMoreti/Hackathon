@@ -153,11 +153,14 @@ export default function ChatAgendamento() {
           addBotMessage("Ok, escolha outra data.");
           setStep("data");
         }
+        setStep("cpf")
+        addBotMessage("Insira um novo CPF caso queira uma nova consulta: ")
         break;
     }
   };
 
   return (
+
     <div className="chat-container">
       {/* Header */}
       <div className="chat-header">
@@ -169,6 +172,11 @@ export default function ChatAgendamento() {
           </div>
         </div>
         <Link to="/"><ArrowLeft className="h-6" /></Link>
+
+    <div className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden text-black h-screen">
+      <div className="flex  items-center justify-between p-4 border-b border-black font-semibold">
+        <p>Chatbox</p>
+        <Link to="/" ><ArrowLeft className="h-8"></ArrowLeft></Link>
       </div>
 
       {/* Área de mensagens */}
@@ -181,8 +189,11 @@ export default function ChatAgendamento() {
         <div ref={messagesEndRef} />
       </div>
 
+
       {/* Área de input */}
       <div className="chat-input-area">
+
+      <div className="p-4 border-t border-black flex gap-2">
         <ChatInput text={input} onChange={setInput} onSend={handleSend} />
         <ChatButton
           input={input}
