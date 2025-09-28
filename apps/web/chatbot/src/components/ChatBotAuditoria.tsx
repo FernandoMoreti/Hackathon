@@ -246,6 +246,7 @@ export default function ChatAuditoria() {
         <div ref={messagesEndRef} />
       </div>
 
+
       {/* Input + Botão + Upload */}
       <div className="p-4 border-t border-black flex gap-2 items-center">
         <label className="cursor-pointer text-gray-500 hover:text-black">
@@ -271,6 +272,8 @@ export default function ChatAuditoria() {
         >
           <Send size={18} />
         </button>
+
+      
       </div>
 
       {pdfFile && (

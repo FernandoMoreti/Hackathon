@@ -31,6 +31,7 @@ export default function ChatAgendamento() {
   const [especialidades, setEspecialidades] = useState([]);
   const [medico, setMedico] = useState("");
   const [medicos, setMedicos] = useState([])
+  const [cidade, setCidade] = useState("")
   const [medicoId, setMedicoId] = useState("");
   const [data, setData] = useState("");
   const [datas, setDatas] = useState([]);
@@ -108,6 +109,7 @@ export default function ChatAgendamento() {
       case "medico":
         setMedico(medicos[value - 1].name);
         setMedicoId(medicos[value - 1].id);
+        setCidade(medicos[value - 1].cidade);
         try {
           const res = await fetch(`http://localhost:8000/disponibilidade?medicoId=${medicos[value - 1].id}`);
           const data = await res.json();
@@ -126,7 +128,7 @@ export default function ChatAgendamento() {
       case "data":
         setData(datas[value - 1]);
         addBotMessage(
-          `Confirma sua consulta com ${medico}, em ${datas[value - 1]}, na especialidade ${especialidade}? (Responda "sim" ou "não")`
+          `Confirma sua consulta com ${medico}, em ${datas[value - 1]}, na cidade de ${cidade} na especialidade ${especialidade}? (Responda "sim" ou "não")`
         );
         setStep("confirmacao");
         break;
