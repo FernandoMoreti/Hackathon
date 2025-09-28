@@ -1,6 +1,4 @@
-# 💻 [NOME DO PROJETO]
-
-![Imagem/Logo do Projeto - Opcional, mas recomendado]
+# 💻 Tokenizados
 
 ## 💡 Tema
 
