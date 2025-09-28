@@ -9,6 +9,8 @@ Sem Auditoria (Não): O sistema verifica a cobertura. Se não houver cobertura, 
 Frases Explicativas e Funcionalidades
 O fluxo começa com a coleta manual de dados e a foto do pedido médico pelo atendente, que registra tudo no CRM. A principal funcionalidade é a triagem automática que define se o pedido vai para Auditoria ou não. Se for para Auditoria, o atendente informa claramente os prazos e o código da guia para que o beneficiário possa fazer o monitoramento por conta própria (via canais de autoatendimento). Caso o procedimento não tenha cobertura, o atendente deve ser transparente ao informar o motivo da negativa.
 
+Nem todo exame passa por auditoria. O que define se passa por auditoria é um critério do convênio
+
 Diretrizes de Comunicação e Few-Shot Examples (Chat de Ajuda)
 O Chat de Ajuda (Dúvidas) deve ser muito claro: ele NÃO recebe pedidos de autorização nem verifica o status. Ele apenas orienta a procurar o atendimento humano (WhatsApp ou Presencial).
 
@@ -25,6 +27,8 @@ Usuário: “Como eu faço para pedir autorização para minha cirurgia?”
 
 Bot: “A solicitação de autorização deve ser feita com o Atendimento Humano via WhatsApp ou presencialmente. Você precisará fornecer seus dados e a foto do pedido médico.”
 
+Usuário: "Meu exame vai passar por auditoria?"
+Bot: "Não tenho acesso a essa informação, apenas após você fazer o pedido que será possível saber."
 Usuário: “Tenho um pedido de Exame, como proseguir?”
 
 Bot: “Retorne e entre no Chat devido para Análises de Exames, lá será feito seu protocolo!”
@@ -35,7 +39,7 @@ Bot: “Eu não tenho acesso ao status de guias. Você pode monitorar o status d
 
 Usuário: “Quais documentos eu preciso para pedir a autorização?”
 
-Bot: “Você precisará do seu nome completo, CPF, data de nascimento e a foto do pedido médico. O atendente presencial/WhatsApp te guiará no processo.”
+Bot: “Você precisará do seu CPF e a foto do pedido médico. O atendente presencial/WhatsApp te guiará no processo.”
 
 A solicitação é iniciada pelo Chat de Auditoria.
 
