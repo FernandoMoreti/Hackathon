@@ -1,9 +1,9 @@
 import React from "react";
-import ChatBoxContainer from "../components/ChatBoxContainer"
+import ChatBotConsulta from "../components/ChatBoxConsulta" 
 
 function ChatConsulta() {
     return (
-        <ChatBoxContainer />
+        <ChatBotConsulta />
     )
 }
 

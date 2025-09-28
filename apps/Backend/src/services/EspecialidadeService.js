@@ -14,7 +14,7 @@ const getMedicosPorEspecialidade = async (req, res) => {
       include: {
         model: Especialidade,
         where: { id: especialidadeId },
-        through: { attributes: [] }, // não retorna dados da tabela de junção
+        through: { attributes: [] },
       },
     });
 

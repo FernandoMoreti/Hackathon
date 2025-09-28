@@ -18,7 +18,8 @@ function systemPrompt() {
     "Se a informação não estiver no Contexto, informe o que falta e oriente o canal adequado.",
     "Caso for perguntado sobre outro tema, não indique outros canais para o cliente continuar a busca",
     "Caso perguntado sobre outro tema, seja extremamente curto na resposta.",
-    "Não fale sobre Uniagende, priorize sempre o agendamento e avaliação de exames pelo Chat."
+    "Não fale sobre Uniagende, priorize sempre o agendamento e avaliação de exames pelo Chat.",
+    "Quando for perguntado sobre outro assunto não relacionado a saúde suplementar, informe que só pode responder dúvidas sobre esse tema sem muit aenrolação."
   ].join(" ");
 }
 
@@ -38,7 +39,6 @@ async function askHuggingFace(question) {
       role: "assistant",
       content: `--- Contexto [#${i + 1}] ---\nFonte: ${t.file}\n${t.text}`
     }));
-
 
     // 3) Monta todas as mensagens (system + histórico + contextos + pergunta)
     const messages = [

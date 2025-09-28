@@ -1,5 +1,5 @@
 import React from "react";
-import ChatBoxContainer from "../components/ChatBoxContainer"
+import ChatBoxContainer from "../components/ChatBotContainer"
 
 function ChatAuditoria() {
     return (
