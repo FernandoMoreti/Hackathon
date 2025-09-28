@@ -1,6 +1,4 @@
 import { useState, useRef, useEffect, ChangeEvent } from "react";
-import ChatInput from "./ChatInput";
-import ChatButton from "./ChatButton";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -112,10 +110,10 @@ export default function ChatAuditoria() {
 
       <div className="p-4 border-t border-gray-200 flex flex-col gap-2">
         <div className="flex gap-2 items-center">
-          <input type="file" accept="application/pdf" onChange={handlePdfChange} />
+          <input className="flex-1 bg-white resize-none border border-gray-300 rounded-xl p-2 focus:outline-none text-black" type="file" accept="application/pdf" onChange={handlePdfChange} />
           <button 
             onClick={handleSendPdf} 
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-black text-white p-3 flex items-center justify-center rounded hover:bg-gray-800 transition"
           >
             Enviar PDF
           </button>
