@@ -12,10 +12,23 @@ Desenvolvimento de uma solução que aplica **Inteligência Artificial (IA)** pa
 
 Desenvolver um conjunto de soluções integradas (chatbot com IA Generativa, sistema de autorização de exames e sistema de agendamento de consultas) que demonstrem inovação e aplicabilidade real no setor de saúde suplementar.
 
+--
+## 📌 Artefatos de Software
+
+Nesta seção estão disponibilizados os principais artefatos de análise e modelagem do sistema, que auxiliam na compreensão do negócio e no detalhamento técnico.
+
+- 📝 [Business Model Canvas]((https://www.canva.com/design/DAG0PbxLx6s/vIMXw-o3QoWtvr0zTunRww/edit?utm_content=DAG0PbxLx6s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton))
+- 🎭 [Diagrama de Casos de Uso]([link_aqui](https://www.canva.com/design/DAG0LW1lcc8/wUhsOKllU4cEVM8r6NjFig/edit?utm_content=DAG0LW1lcc8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton))
+- 🔄 [Diagrama BPMN]([link_aqui](https://lucid.app/lucidchart/fb30f3c7-c8be-488e-8838-55a969eee649/edit?viewport_loc=-1562%2C-2056%2C6631%2C2900%2Cm-5o7ONTd-nK&invitationId=inv_5e7ffd0e-1184-4b98-a5b4-f63e769a2554))
+- 🗂️ [Diagrama Entidade-Relacionamento (DER)]([link_aqui](https://app.brmodeloweb.com/#!/publicview/68d8e8255e31ebea4713f302))
+--
+
 ## 🚀 Solução
 
 O **Tokenizados** é uma plataforma que integra um **Chatbot Inteligente com IA Generativa**, um **Sistema Automatizado de Autorização de Exames** e um **Sistema de Agendamento de Consultas**, otimizando o atendimento e a gestão de processos para beneficiários e operadoras de saúde, focando na redução de tempo de espera e eliminação de burocracia.
 
+---
+## 
 ---
 
 ## ✨ Funcionalidades Implementadas (Tarefas do Regulamento)
