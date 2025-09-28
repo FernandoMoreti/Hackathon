@@ -55,12 +55,13 @@ function parseFromMensagem(raw: string) {
   const protocolo = protoMatch?.[1] || null;
 
   let status: string | null = null;
+  const isOPME = /OPME/i.test(raw);
+  const isAuditoria = /auditoria/i.test(raw) || (!isOPME && /retorno em até 10/i.test(raw));
+
+  // 👇 status deve ser em_auditoria mesmo se OPME
   if (/autorizado/i.test(raw)) status = "autorizado_imediato";
   else if (/negado/i.test(raw) || /sem cobertura/i.test(raw)) status = "negado_sem_cobertura";
-  else if (/auditoria/i.test(raw) || /OPME/i.test(raw)) status = "em_auditoria";
-
-  const isOPME = /OPME/i.test(raw);
-  const isAuditoria = /auditoria/i.test(raw) || (!isOPME && /retorno em até 5/i.test(raw));
+  else if (/auditoria/i.test(raw) || isOPME) status = "em_auditoria";
 
   return { procedimento, protocolo, status, isOPME, isAuditoria };
 }
@@ -73,21 +74,26 @@ function toRichBotMessage(item: ServerMsg): Message {
   let status = normalizeStatus(item.status ?? null);
   let retornoPrevisto: Date | null = null;
 
-  if (item.prazo_retorno) {
-    const d = new Date(item.prazo_retorno + "T00:00:00");
-    if (!isNaN(d.getTime())) retornoPrevisto = d;
+  const parsed = parseFromMensagem(item.mensagem || "");
+  procedimento = procedimento || parsed.procedimento;
+  protocolo = protocolo || parsed.protocolo;
+  status = status || parsed.status;
+
+  // Gera protocolo se ainda estiver faltando
+  if (!protocolo) {
+    protocolo = `${Math.floor(Math.random() * 100000000000)}`;
   }
 
-  if (!procedimento || !status || !protocolo || !retornoPrevisto) {
-    const parsed = parseFromMensagem(item.mensagem || "");
-    procedimento = procedimento || parsed.procedimento;
-    protocolo = protocolo || parsed.protocolo;
-    status = status || parsed.status;
+  // Calcular retorno baseado em OPME ou auditoria
+  if (!retornoPrevisto && status === "em_auditoria") {
+    if (parsed.isOPME) retornoPrevisto = addDays(now, 10);
+    else if (parsed.isAuditoria) retornoPrevisto = addDays(now, 5);
+  }
 
-    if (!retornoPrevisto && status === "em_auditoria") {
-      if (parsed.isOPME) retornoPrevisto = addDays(now, 10);
-      else if (parsed.isAuditoria) retornoPrevisto = addDays(now, 5);
-    }
+  // Usar prazo explícito se enviado pela API
+  if (!retornoPrevisto && item.prazo_retorno) {
+    const d = new Date(item.prazo_retorno + "T00:00:00");
+    if (!isNaN(d.getTime())) retornoPrevisto = d;
   }
 
   const dataSolicitacao = item.data_solicitacao
@@ -98,12 +104,13 @@ function toRichBotMessage(item: ServerMsg): Message {
     text: item.mensagem || "",
     from: "bot",
     procedimento: procedimento || null,
-    status: status || null,
-    protocolo: protocolo || null,
+    status: parsed.isOPME ? "OPME" : status, // ← aqui mostramos OPME se necessário
+    protocolo,
     dataSolicitacao,
     retornoPrevisto,
   };
 }
+
 
 export default function ChatAuditoria() {
   const [messages, setMessages] = useState<Message[]>([]);
