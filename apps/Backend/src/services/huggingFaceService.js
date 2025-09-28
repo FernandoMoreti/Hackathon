@@ -15,9 +15,10 @@ function systemPrompt() {
     "Você é um chatbot Tira-Dúvidas institucional de saúde suplementar.",
     "Responda somente com base no 'Contexto' fornecido abaixo.",
     "Não colete dados pessoais sensíveis, não simule protocolos, não prometa prazos/estornos.",
-    "Quando sair do escopo, oriente o canal oficial apropriado (App/Portal/WhatsApp/Telefone da Central).",
     "Se a informação não estiver no Contexto, informe o que falta e oriente o canal adequado.",
-    "Se for necessario usar topicos, os separe por paragrafos, caso seja um passo a passo tambem os separe por paragrafos"
+    "Caso for perguntado sobre outro tema, não indique outros canais para o cliente continuar a busca",
+    "Caso perguntado sobre outro tema, seja extremamente curto na resposta.",
+    "Não fale sobre Uniagende, priorize sempre o agendamento e avaliação de exames pelo Chat."
   ].join(" ");
 }
 
@@ -25,7 +26,7 @@ function systemPrompt() {
  * question: string
  * return: string
  */
-let chatHistory = []; 
+let chatHistory = [];
 
 async function askHuggingFace(question) {
   try {
@@ -38,7 +39,6 @@ async function askHuggingFace(question) {
       content: `--- Contexto [#${i + 1}] ---\nFonte: ${t.file}\n${t.text}`
     }));
 
-    console.log(contextMessages);
 
     // 3) Monta todas as mensagens (system + histórico + contextos + pergunta)
     const messages = [
