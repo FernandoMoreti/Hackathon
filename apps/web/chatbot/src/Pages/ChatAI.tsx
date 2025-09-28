@@ -1,9 +1,9 @@
 import React from "react";
-import ChatBoxContainer from "../components/ChatBoxContainer"
+import ChatBotContainer from "../components/ChatBotContainer"
 
 function ChatAI() {
     return (
-        <ChatBoxContainer />
+        <ChatBotContainer />
     )
 }
 

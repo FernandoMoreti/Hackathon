@@ -38,24 +38,23 @@ const beneficiarioSchema = yup.object().shape({
     .test("is-cpf", "CPF inválido", value => isValidCPF(value || "")),
 });
 
-const validateBeneficiario = async (req, res, next) => {
+const validateBeneficiario = async (req, res) => {
   try {
     const { cpf } = await beneficiarioSchema.validate({ cpf: req.query.cpf }, { abortEarly: false });
-
+    
     const user = await Paciente.findOne({ where: { cpf } });
 
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado!" });
     }
-
+   
     const especialidade = await Especialidade.findAll()
 
-    return res.status(200).json({ message: "ok", data: especialidade})
+    return res.status(200).json({ message: "ok", data: especialidade, user: user.id})
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).json({ errors: error.errors });
     }
-    next(error);
   }
 };
 
