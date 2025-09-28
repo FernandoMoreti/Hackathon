@@ -9,7 +9,7 @@ const Consulta = sequelize.define('Consulta', {
     allowNull: false,
   },
   dt_consulta: {
-    type: DataTypes.DATEONLY, // apenas data
+    type: DataTypes.DATEONLY, 
     allowNull: false,
   },
   id_paciente: {
