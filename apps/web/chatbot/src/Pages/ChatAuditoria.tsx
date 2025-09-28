@@ -1,10 +1,10 @@
 import React from "react";
-import ChatBoxContainer from "../components/ChatBotContainer"
+import ChatAuditoria from "../components/ChatBotAuditoria"
 
-function ChatAuditoria() {
+function ChatBotAuditoria() {
     return (
-        <ChatBoxContainer />
+        <ChatAuditoria />
     )
 }
 
-export default ChatAuditoria
+export default ChatBotAuditoria

@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import ChatInput from "./ChatInput";
 import ChatButton  from "./ChatButton";
+import { Link } from "react-router-dom";
+
+import { ArrowLeft } from "lucide-react";
 
 export type Message = {
   text: string;
@@ -53,7 +56,11 @@ export default function ChatContainer() {
 
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden text-black h-screen">
-      <div className="p-4 border-b border-gray-200 font-semibold">Chatbox</div>
+      
+      <div className="flex  items-center justify-between p-4 border-b border-gray-200 font-semibold">
+        <p>Chatbox</p>
+        <Link to="/" ><ArrowLeft className="h-8"></ArrowLeft></Link>
+      </div>
 
       <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2">
         {messages.map((msg, i) => (
