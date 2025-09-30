@@ -5,6 +5,7 @@
 **IX HACKATHON FACEF 2025: Inovação Tecnológica em Saúde Suplementar**
 
 Desenvolvimento de uma solução que aplica **Inteligência Artificial (IA)** para melhorar a **experiência do cliente**, a **agilidade dos processos** e a **eficiência** de uma operadora de saúde suplementar.
+PROJETO DESENVOLVIDO EM 24H
 
 ---
 
